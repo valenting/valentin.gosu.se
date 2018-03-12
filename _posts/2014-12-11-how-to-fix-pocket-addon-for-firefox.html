@@ -1,0 +1,12 @@
+---
+layout: post
+title: How to fix the Pocket addon for Firefox
+date: '2014-12-11T08:58:00.002+02:00'
+author: Valentin Gosu
+tags: 
+modified_time: '2015-02-08T04:07:56.248+02:00'
+blogger_id: tag:blogger.com,1999:blog-5128745106054389773.post-233153730621977537
+blogger_orig_url: http://binary-choice.blogspot.com/2014/12/how-to-fix-pocket-addon-for-firefox.html
+---
+
+[Update2: Pocket eventually got updated, and my fixes and workarounds were no longer needed, so I deleted the repo. Me bugging them about it could have had something to do with it, but probably didn't. Either way, I'm glad they fixed it.] <br /><br />[Update: Due to a request from getpocket.com I no longer provide the source code or binaries to the addon on Github. I have changed the Makefile to pull the broken extension from the web, and patch it locally (without hosting any code).] <br /><br /><br />Pocket (formerly ReadItLater) is a great tool that allows you to bookmark webpages and download them in order to read them later (get it?).<br /><br />However, <a href="https://addons.mozilla.org/en-US/firefox/addon/read-it-later/">the Firefox addon</a> is no longer supported, and a tiny change in the JavaScript engine has caused it to stop working. Hence <span id="goog_1012075921"></span><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1068790">BUG 1068790</a><a href="https://www.blogger.com/null">.<span id="goog_1012075922"></span></a><br /><br />The JavaScript change is basically that variables declared using let are no longer accessible outside the block they were declared in. Fixing the addon turned out to be super easy. Just find-and-replace all 'let ' instances with 'var '.<br /><br />Problem solved. I put the <a href="https://github.com/valenting/pocket">code on github</a> so everyone can see how easy it is, and even <a href="https://github.com/valenting/pocket/releases">packaged</a> it for people who aren't so technical.<br /><br />Keep rocking the open web!
