@@ -1,7 +1,7 @@
 title: Binary Ch01ce (blog)
 description: >- # this means to ignore newlines until "baseurl:"
   This is my personal blog. I sometimes post about Open Source, coding, Mozilla, and some of my various views or passions.
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/blog" # the subpath of your site, e.g. /blog
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: ValentinGosu
 github_username:  valenting
