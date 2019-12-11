@@ -15,4 +15,4 @@ theme: minima
 # plugins:
 #   - jekyll-feed
 
-permalink:  /:year/:month/:title
+permalink:  /blog/:year/:month/:title
