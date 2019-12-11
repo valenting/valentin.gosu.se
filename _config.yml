@@ -8,7 +8,7 @@ github_username:  valenting
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: jekyll-theme-cayman
 
 # paginate:     20
 
