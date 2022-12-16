@@ -254,6 +254,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (1.8.0)
+    webrick (1.7.0)
     zeitwerk (2.5.4)
 
 PLATFORMS
@@ -267,6 +268,7 @@ DEPENDENCIES
   minima (~> 2.0)
   tale
   tzinfo-data
+  webrick (~> 1.7)
 
 BUNDLED WITH
    2.3.14

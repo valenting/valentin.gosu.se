@@ -6,6 +6,9 @@ index_path: "/blog/"
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: ValentinGosu
 github_username:  valenting
+mastodon:
+- username: valenting
+  instance: mastodon.social
 
 # Build settings
 markdown: kramdown
