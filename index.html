@@ -1,11 +1,299 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>Valentin Goșu</title>
+  <style type="text/css">
+
+/* icons from https://codepen.io/mgifford-the-typescripter/pen/zYjygjL?editors=1100 */
+    body {  transition: all .3s ease; }
+
+a {
+  display: inline-block;
+}
+
+/* Set icon size */
+.svg-icon svg {
+  width: 50px;
+  height: 50px;
+  color: white;
+  vertical-align: middle;
+}
+
+.svg-icon svg > g rect {
+  fill: gray;
+}
+.svg-icon svg > g circle {
+  fill: gray;
+}
+
+.svg-background {
+  opacity: 0.3;
+}
+a:hover .svg-background {
+  opacity: 0.6;
+}
+
+/* Hide social media links when printing. */
+@media print {
+  .svg-icon {
+    display: none;
+  }
+}
+
+
+/* Dark Mode Settings */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #fff;
+    background-color: #333;
+  }
+  p { color: #fff; }
+  .color-scheme--light, .color-scheme--no-preference {
+    display:none;
+  }
+  /* SVG Icons */
+  .svg-icon svg {
+    color: white;
+  }
+  a { color: #add8e6; }
+  /* Hover/Focus Color */
+  a:hover .svg-icon svg g path  {
+    color: #D83933;
+  } 
+  a:hover .svg-icon svg {
+    fill: #D83933;
+  } 
+  a:focus .svg-icon svg g path  {
+    color: #00A398;
+  } 
+  a:focus .svg-icon svg {
+    color: #00A398;
+  } 
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    color: #333;
+    background-color: #fff;
+  }
+   p { color: #000; }
+  .color-scheme--dark, 
+  .color-scheme--no-preference {
+    display:none;
+  }
+  /* SVG Icons */
+  .svg-icon svg {
+    color: #1B1B1B;
+  }
+  /* Hover color  */
+  a:hover .svg-icon svg g path {
+    color: #A23737;
+  } 
+  a:hover .svg-icon svg {
+    fill: #A23737;
+  } 
+  a:focus .svg-icon svg g path  {
+    color: #00A398;
+  } 
+  a:focus .svg-icon svg {
+    color: #00A398;
+  } 
+}
+@media (prefers-color-scheme: no-preference) { 
+  body {
+    color: #333;
+    background-color: #fff;
+  }
+   p { color: #000; }
+  .color-scheme--light, 
+  .color-scheme--dark {
+    display:none;
+  }
+  /* SVG Icons */
+  .svg-icon svg path {
+    fill: #1B1B1B;
+  } 
+  /* Hover color */
+  a:hover .svg-icon svg g path {
+    color: #A23737;
+  } 
+  a:hover .svg-icon svg {
+    fill: #A23737;
+  } 
+  a:focus .svg-icon svg g path  {
+    color: #00A398;
+  } 
+  a:focus .svg-icon svg {
+    color: #00A398;
+  } 
+}
+
+/* Forced Colors - Note: SVG elements retain their original colors in forced colors modes */
+@media (forced-colors: active) {  
+  a:hover .svg-icon {
+    fill: text-emphasis-color;
+    outline: 2px solid transparent;
+    box-shadow: 0 0 10px 2px;
+  }
+  a:focus .svg-icon {
+    filter: drop-shadow(0 0 .05em WindowText);
+    fill: text-emphasis-color;
+  }
+  a:hover .svg-icon svg g path {
+    fill: text-emphasis-color;
+  }
+  a:focus .svg-icon svg g path {
+    fill: outline-color;
+  }
+  a .svg-icon svg g path {
+    fill: LinkText;
+  }
+}
+/* Styles here only apply to forced colors */
+@media (prefers-contrast: forced) {
+  a:hover .svg-icon {
+    fill: text-emphasis-color;
+    outline: 2px solid transparent;
+    box-shadow: 0 0 10px 2px;
+  }
+  a:focus .svg-icon {
+    fill: outline-color;
+  }
+}
+
+/* Hide visually */
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+} 
+  </style>
 </head>
 <body>
+<p>
+<a href="/blog/">
+  <span class="svg-icon">
+    <svg id="blog-svg" version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="24" height="24" viewBox="0 0 64 64"
+ aria-hidden="true">
+<g class="svg-background">
+        <circle cx="50%" cy="50%" r="50%" />
+        <rect width="100%" height="100%" ry="16" rx="16" />
+      </g>
+<g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)">
+<path fill="currentColor" d="M269 403 l-185 -188 -18 -78 c-10 -43 -16 -81 -13 -84 3 -3 41 3 84
+13 l78 18 188 185 c214 212 215 215 148 282 -67 67 -70 66 -282 -148z m267
+133 c41 -41 42 -57 7 -96 l-28 -31 -53 54 -53 54 31 27 c41 34 55 33 96 -8z
+m-126 -59 c0 -7 -61 -73 -135 -147 -107 -107 -137 -132 -147 -122 -10 10 16
+41 127 152 128 129 155 149 155 117z m-89 -181 c-112 -112 -143 -138 -153
+-128 -18 18 260 296 280 280 11 -9 -14 -39 -127 -152z m173 106 c3 -5 -58 -71
+-134 -147 -111 -111 -142 -137 -152 -127 -10 10 15 40 122 147 127 127 152
+146 164 127z m-339 -252 c21 -22 37 -41 34 -43 -8 -7 -101 -28 -105 -24 -6 6
+18 107 26 107 3 0 23 -18 45 -40z"/>
+</g>
+</svg>
+  <span class="visually-hidden">Blog</span>
+  <span class="social-id">/blog/</span>
+  </span>
+</a>
+</p>
+<p>
+<a href="https://www.linkedin.com/in/valentin-gosu/">
+  <span class="svg-icon">
+    <svg id="linkedin-svg" xmlns="http://www.w3.org/2000/svg" width="64" height="64" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 640 640" aria-hidden="true">
+      <g class="svg-background">
+        <circle cx="50%" cy="50%" r="50%" />
+        <rect width="100%" height="100%" ry="150" rx="150" />
+      </g>
+      <g transform="scale(0.65, 0.65)">
+        <path fill="currentColor" transform="translate(160, 160)" d="M228.582 205.715h126.462v64.832h1.83c17.611-31.595 60.675-64.832 124.892-64.832C615.303 205.715 640 288.818 640 396.926v220.219H508.116V421.93c0-46.536-.969-106.442-68.576-106.442-68.67 0-79.194 50.658-79.194 103.052v198.605H228.581v-411.43zM137.152 91.43c0 37.855-30.721 68.576-68.576 68.576-37.855 0-68.587-30.721-68.587-68.576 0-37.855 30.732-68.576 68.587-68.576 37.855 0 68.576 30.721 68.576 68.576zM-.011 205.715h137.163v411.43H-.011v-411.43z" />
+      </g>
+    </svg>
+    <span class="visually-hidden">LinkedIn</span>
+    <span class="social-id">@valentin-gosu</span>
+  </span>
+</a>
+</p>
 
-  <a href="/blog/"> Blog </a>
+<p>
+<a href="https://mastodon.social/@valenting">
+  <span class="svg-icon">
+    <svg id="mastodon-svg" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 539.675" aria-hidden="true">
+      <g class="svg-background">
+        <circle cx="50%" cy="50%" r="50%" />
+        <rect width="100%" height="100%" ry="150" rx="150" />
+      </g>
+      <g transform="scale(0.7, 0.7)">
+        <path fill="currentColor" transform="translate(100, 100)" fill-rule="nonzero" d="M509.934 119.48C502.047 61.492 450.957 15.797 390.393 6.943 380.174 5.444 341.461 0 251.779 0h-.669c-89.706 0-108.95 5.444-119.169 6.943C73.064 15.552 19.296 56.613 6.25 115.283c-6.274 28.896-6.943 60.93-5.779 90.315 1.663 42.141 1.984 84.206 5.854 126.175a587.526 587.526 0 0013.962 82.76c12.4 50.284 62.598 92.13 111.779 109.203a302.928 302.928 0 00163.538 8.535 244.938 244.938 0 0017.707-4.782c13.169-4.148 28.621-8.782 39.981-16.927.154-.113.282-.262.374-.432.089-.17.138-.358.146-.549v-40.666a1.197 1.197 0 00-.465-.929 1.242 1.242 0 00-1.023-.227 457.85 457.85 0 01-106.125 12.264c-61.505 0-78.048-28.87-82.784-40.888a125.62 125.62 0 01-7.194-32.23c-.01-.186.026-.369.102-.539a1.165 1.165 0 01.834-.674c.181-.04.371-.034.552.01a449.063 449.063 0 00104.389 12.264c8.457 0 16.888 0 25.347-.219 35.366-.981 72.64-2.772 107.436-9.493.868-.173 1.736-.319 2.482-.538 54.884-10.427 107.113-43.149 112.422-126.005.199-3.264.696-34.168.696-37.555.023-11.503 3.744-81.604-.547-124.676zm-84.473 206.752H367.75V186.417c0-29.435-12.4-44.445-37.625-44.445-27.727 0-41.615 17.758-41.615 52.834v76.528h-57.363v-76.528c0-35.076-13.915-52.834-41.642-52.834-25.075 0-37.599 15.01-37.625 44.445v139.815H94.219V182.173c0-29.432 7.597-52.818 22.792-70.151 15.675-17.293 36.234-26.171 61.754-26.171 29.539 0 51.859 11.234 66.741 33.676l14.359 23.844 14.385-23.844c14.88-22.442 37.201-33.676 66.691-33.676 25.494 0 46.053 8.878 61.777 26.171 15.196 17.317 22.793 40.7 22.793 70.151l-.05 144.059z" />
+      </g>
+    </svg>
+    <span class="visually-hidden">Mastodon</span>
+    <span class="social-id">@valenting</span>
+  </span></a>
+</p>
+
+
+<!-- 
+<p>
+<a href="#Facebook">
+  <span class="svg-icon">
+    <svg id="facebook-svg" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 640 640" aria-hidden="true">
+      <g class="svg-background">
+        <circle cx="50%" cy="50%" r="50%" />
+        <rect width="100%" height="100%" ry="150" rx="150" />
+      </g>
+      <g transform="scale(0.75, 0.75)">
+        <path fill="currentColor" transform="translate(80, 100)" d="M380.001 120.001h99.993V0h-99.993c-77.186 0-139.986 62.8-139.986 139.986v60h-80.009V320h79.985v320h120.013V320h99.994l19.996-120.013h-119.99v-60.001c0-10.843 9.154-19.996 19.996-19.996v.012z" />
+      </g>
+    </svg>
+    <span class="visually-hidden">Facebook</span>
+  </span></a>
+</p>
+ -->
+
+
+<p>
+<a href="https://github.com/valenting/">
+  <span class="svg-icon">
+    <svg id="github-svg" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="svg-background">
+        <circle cx="50%" cy="50%" r="50%" />
+        <rect width="100%" height="100%" ry="6" rx="6" />
+      </g>
+      <g transform="scale(0.9, 0.9)">
+        <path fill="currentColor" transform="translate(1.5, 1.5)" d="m12 2a10 10 0 0 0 -10 10c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5 0-.23 0-.86 0-1.69-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85v2.74c0 .27.16.59.67.5 3.97-1.34 6.83-5.08 6.83-9.5a10 10 0 0 0 -10-10z" />
+      </g>
+    </svg>
+    <span class="visually-hidden">GitHub</span>
+    <span class="social-id">@valenting</span>
+  </span></a>
+</p>
+
+
+<p>
+<a href="https://twitter.com/ValentinGosu">
+  <span class="svg-icon">
+    <svg id="twitter-svg" xmlns="http://www.w3.org/2000/svg" width="64" height="64" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 640 640" aria-hidden="true">
+      <g class="svg-background">
+        <circle cx="50%" cy="50%" r="50%" />
+        <rect width="100%" height="100%" ry="150" rx="150" />
+      </g>
+      <g transform="scale(0.7, 0.7)">
+        <path fill="currentColor" transform="translate(150, 150)" d="M640.012 121.513c-23.528 10.524-48.875 17.516-75.343 20.634 27.118-16.24 47.858-41.977 57.756-72.615-25.347 14.988-53.516 25.985-83.363 31.866-24-25.5-58.087-41.35-95.848-41.35-72.508 0-131.21 58.736-131.21 131.198 0 10.228 1.134 20.232 3.355 29.882-109.1-5.528-205.821-57.757-270.57-137.222a131.423 131.423 0 0 0-17.764 66c0 45.497 23.102 85.738 58.347 109.207-21.508-.638-41.74-6.638-59.505-16.359v1.642c0 63.627 45.225 116.718 105.32 128.718-11.008 2.988-22.63 4.642-34.606 4.642-8.48 0-16.654-.874-24.78-2.35 16.783 52.11 65.233 90.095 122.612 91.205-44.989 35.245-101.493 56.233-163.09 56.233-10.63 0-20.988-.65-31.334-1.89 58.229 37.359 127.206 58.997 201.31 58.997 241.42 0 373.552-200.069 373.552-373.54 0-5.764-.13-11.35-.366-16.996 25.642-18.343 47.87-41.493 65.469-67.844l.059-.059z" />
+      </g>
+    </svg>
+    <span class="visually-hidden">Twitter</span>
+    <span class="social-id">@ValentinGosu</span>
+  </span>
+</a>
+</p>
+
 
 </body>
 </html>
