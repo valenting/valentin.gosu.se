@@ -15,7 +15,7 @@ markdown: kramdown
 remote_theme: jekyll/minima
 
 minima:
-  skin: dark
+  skin: auto
 
 # paginate:     20
 
