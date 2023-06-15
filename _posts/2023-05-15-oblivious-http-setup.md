@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Setup and Oblivious HTTP gateway locally"
+title: "Setup an Oblivious HTTP gateway locally"
 ---
 
 # What is Oblivious HTTP
