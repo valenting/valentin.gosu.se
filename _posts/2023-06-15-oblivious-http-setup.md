@@ -73,7 +73,7 @@ Run the following code to perform an OHTTP request.
   var ohttpServer = ohttp.server();
   var config = ohttpServer.encodedConfig;
   var config = await fetch(
-    "https://localhost:4567/ohttp-configs"
+    "https://localhost:4567/ohttp-configs", { cache: "no-store" }
   );
   console.log("fetched");
   config = await config.blob();
