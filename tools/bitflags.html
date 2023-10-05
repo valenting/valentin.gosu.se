@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitflag visualizer</title>
+  <style>
+    .match {
+      background-color: red;
+    }
+    .partial {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+
+<table>
+  <thead>
+    <td> Input </td>
+    <td> Dec </td>
+    <td> Hex </td>
+  </thead>
+  <tr>
+    <td> <input type="text" id="input"> </td>
+    <td> <div id="decNum"> </div> </td>
+    <td> <div id="hexNum"> </div> </td>
+  </tr>
+</table>
+
+<!-- BITFLAGS: NAME, VALUE -->
+
+<script type="text/javascript">
+  // data = {"input":100,"flags":[{"name": "flagA", "value": 1},{"name": "flagB", "value": 2}]}
+  // data = {"input": 123, "flags": [{"name": "flag1", value: "1<<10"}, {"name": "flag2", value: "1024"}, {"name": "flag3", value: "0x10"}]}
+
+  function parseNum(textValue) {
+    let text = textValue.toString();
+    let num = 0;
+    try {
+      if (text.includes("<<")) {
+        let numbers = text.split("<<");
+        let a = Number.parseInt(numbers[0]);
+        let b = Number.parseInt(numbers[1]);
+        return a << b;
+      } else if (/[a-fA-F]/g.test(text)) {
+        num = Number.parseInt(text, 16);
+      } else {
+        num = Number.parseInt(text);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return num;
+  }
+
+  function init() {
+    var data = {input: 0, flags: []};
+    try {
+      console.log(unescape(location.hash.substring(1)));
+      data = JSON.parse(unescape(location.hash.substring(1)));
+    } catch (e) {
+      console.error(e);
+      console.log("no good data in the hash");
+    }
+    location.hash = JSON.stringify(data);
+
+    let inputBox = document.getElementById("input");
+
+    let inputNumber = data.input || 0;
+    inputBox.addEventListener("keyup", () => {
+      inputNumber = parseNum(inputBox.value);
+      data.input = inputNumber;
+      location.hash = JSON.stringify(data);
+    });
+
+    document.getElementById("decNum").textContent = inputNumber.toString();
+    document.getElementById("hexNum").textContent = "0x"+inputNumber.toString(16);
+
+    let flagsElement = document.getElementById("flags");
+    flagsElement.innerHTML = "";
+    let th = document.createElement("thead");
+    let td = document.createElement("td");
+    td.appendChild(document.createTextNode("Name"));
+    th.appendChild(td);
+    td = document.createElement("td");
+    td.appendChild(document.createTextNode("Content"));
+    th.appendChild(td);
+    td = document.createElement("td");
+    td.appendChild(document.createTextNode("Value (dec)"));
+    th.appendChild(td);
+    td = document.createElement("td");
+    td.appendChild(document.createTextNode("Value (hex)"));
+    th.appendChild(td);
+    flagsElement.appendChild(th);
+
+    for (let i in data.flags) {
+      let flag = data.flags[i];
+      let row = document.createElement("tr");
+      let td = document.createElement("td");
+
+      let num = parseNum(flag.value);
+
+      td.appendChild(document.createTextNode(flag.name));
+      row.appendChild(td);
+      td = document.createElement("td");
+      td.appendChild(document.createTextNode(flag.value));
+      row.appendChild(td);
+      td = document.createElement("td");
+      td.appendChild(document.createTextNode(num));
+      row.appendChild(td);
+      td = document.createElement("td");
+      td.appendChild(document.createTextNode("0x"+num.toString(16)));
+      row.appendChild(td);
+
+      td = document.createElement("td");
+      let button = document.createElement("button");
+      button.textContent = "❌";
+      row.appendChild(button);
+
+      button.addEventListener("click", () => {
+        data.flags.splice(i, 1);
+        location.hash = JSON.stringify(data);
+      });
+
+      let flagValue = flag.value || 0;
+      if ((inputNumber & flagValue) === flagValue) {
+        console.log(inputNumber, flagValue, inputNumber & flagValue, (inputNumber & flagValue) === flagValue);
+        row.classList.add("match");
+      } else if ((inputNumber & flagValue) != 0) {
+        row.classList.add("partial");
+      }
+      flagsElement.appendChild(row);
+    }
+
+    let tr = document.createElement("tr");
+    td = document.createElement("td");
+    let inputName = document.createElement("input");
+    inputName.id = "newName";
+    td.appendChild(inputName);
+    tr.appendChild(td);
+
+    td = document.createElement("td");
+    let input = document.createElement("input");
+    input.id = "newContent";
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    let dec = document.createElement("td");
+    dec.textContent = "";
+    tr.appendChild(dec);
+    let hex = document.createElement("td");
+    hex.textContent = "";
+    tr.appendChild(hex);
+    
+    input.addEventListener("keyup", () => {
+      let num = parseNum(input.value);
+      dec.textContent = num.toString();
+      hex.textContent = num.toString(16);
+    });
+
+    td = document.createElement("td");
+    let button = document.createElement("button");
+    button.textContent = "➕";
+    button.id = "addBitflag";
+    td.appendChild(button);
+    tr.appendChild(td);
+
+    flags.appendChild(tr);
+    button.addEventListener("click", () => {
+      let num = parseNum(input.value);
+      data.flags.push({name: inputName.value, value: input.value});
+      location.hash = JSON.stringify(data);
+    });
+  }
+
+  window.addEventListener("load", init);
+  window.addEventListener("hashchange", init);
+</script>
+
+
+<br/>
+<br/>
+
+<table id="flags">
+  <thead>
+    <td> Name </td>
+    <td> Value (Text) </td>
+    <td> Value (Dec) </td>
+    <td> Value (Hex) </td>
+    <td> Button </td>
+  </thead>
+  <!-- <tr>
+    <td> <input type="text" id="newName"> </td>
+    <td> <input type="text" id="newContent"> </td>
+    <td> Dec </td>
+    <td> Hex </td>
+    <td> <button id="addBitflag"> ➕ </button> </td>
+  </tr> -->
+</table>
+
+</body>
+</html>
