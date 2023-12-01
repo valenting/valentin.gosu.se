@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online DNS resolver</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="module.js"></script>
+    <script type="text/javascript">
+        function arrayBufferToHexDump(arrayBuffer) {
+        const bytesPerRow = 16;
+        let hexDump = '';
+        let byteArray = new Uint8Array(arrayBuffer);
+
+        for (let i = 0; i < byteArray.length; i += bytesPerRow) {
+            // Extract a slice of bytes and convert each byte to a hex string
+            let rowBytes = byteArray.slice(i, i + bytesPerRow);
+            let hexValues = Array.from(rowBytes).map(byte => byte.toString(16).padStart(2, '0'));
+
+            // Pad the hex values for the last line if necessary
+            if (hexValues.length < bytesPerRow) {
+                hexValues = [...hexValues, ...Array(bytesPerRow - hexValues.length).fill('  ')];
+            }
+
+            // Optionally, add ASCII representation
+            let asciiRepresentation = Array.from(rowBytes).map(byte => {
+                return byte >= 32 && byte <= 126 ? String.fromCharCode(byte) : '.';
+            }).join('');
+
+            // Combine hex values and ASCII representation for the row
+            hexDump += `${hexValues.join(' ')}  ${asciiRepresentation}\n`;
+        }
+
+        return hexDump.trim();
+    }
+
+    window.addEventListener("load", () => {
+        document.getElementById("resolveBtn").addEventListener("click", () => {
+            let url = new URL(location)
+            let domain = document.getElementById("dnsInput").value;
+            url.searchParams.set("dns", domain);
+            history.pushState({}, "", url);
+
+            async function request(domain, type, jsonId, hexId) {
+                console.log(domain);
+                let request = {
+                  type: 'query',
+                  id: 0,
+                  flags: dnsPacket.RECURSION_DESIRED,
+                  questions: [{
+                    type: type,
+                    name: domain
+                  }]
+                };
+                console.log(request);
+                let buf = dnsPacket.encode(request);
+                let x = await fetch("https://1.1.1.1/dns-query?dns="+btoa(buf));
+                let resp = await x.arrayBuffer();
+                let buffer = Buffer.from(resp);
+                document.getElementById(jsonId).textContent = JSON.stringify(dnsPacket.decode(buffer), null, 4);
+
+                document.getElementById(hexId).textContent = arrayBufferToHexDump(resp);
+            }
+            request(domain, "A", "aJson", "aHexDump");
+            request(domain, "AAAA", "aaaaJson", "aaaaHexDump");
+            request(domain, "HTTPS", "httpsJson", "httpsHexDump");
+        });
+
+        let params = new URL(document.location).searchParams;
+        if (params.get("dns")) {
+            document.getElementById("dnsInput").value = params.get("dns");
+            document.getElementById("resolveBtn").click();
+        }
+    });
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>DNS Resolver</h1>
+        <input type="text" id="dnsInput" placeholder="Enter DNS name">
+        <button id="resolveBtn">Resolve</button>
+        <div id="responseA" class="response">
+            <h2>A Record</h2>
+            <pre id="aHexDump"></pre>
+            <pre id="aJson"></pre>
+        </div>
+        <div id="responseAAAA" class="response">
+            <h2>AAAA Record</h2>
+            <pre id="aaaaHexDump"></pre>
+            <pre id="aaaaJson"></pre>
+        </div>
+        <div id="responseHTTPS" class="response">
+            <h2>HTTPS Record</h2>
+            <pre id="httpsHexDump"></pre>
+            <pre id="httpsJson"></pre>
+        </div>
+    </div>
+</body>
+</html>
