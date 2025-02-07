@@ -22,6 +22,8 @@ gem "minima", "~> 2.5"
 # If you have any plugins, put them here!
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.15"
+  gem "jekyll-gfm-admonitions"
+  gem "github-pages"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -33,6 +35,5 @@ gem "wdm", "~> 0.1.0" if Gem.win_platform?
 gem "tale"
 gem "jekyll-remote-theme"
 gem "jekyll-paginate"
-gem "github-pages", group: :jekyll_plugins
 
 gem "webrick", "~> 1.7"

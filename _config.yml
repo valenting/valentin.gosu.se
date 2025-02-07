@@ -8,10 +8,10 @@ twitter_username: ValentinGosu
 github_username:  valenting
 mastodon:
 - username: valenting
-  instance: mastodon.social
+  instance: fosstodon.org
 
 # Build settings
-markdown: kramdown
+markdown: GFM
 remote_theme: jekyll/minima
 
 minima:
@@ -21,5 +21,6 @@ minima:
 
 plugins:
   - jekyll-feed
+  - jekyll-gfm-admonitions
 
 permalink:  /blog/:year/:month/:title

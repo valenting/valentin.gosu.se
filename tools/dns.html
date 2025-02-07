@@ -33,10 +33,26 @@
     }
 
     window.addEventListener("load", () => {
+        document.getElementById("resendBtn").addEventListener("click", async () => {
+            let request = JSON.parse(document.getElementById("aJsonReq").value);
+            console.log(request.questions[0].name);
+            let buf = dnsPacket.encode(request);
+            document.getElementById("aHexDumpReq").textContent = arrayBufferToHexDump(buf);
+            console.log(buf.toString("base64"));
+            let x = await fetch("https://mozilla.cloudflare-dns.com/dns-query?dns="+buf.toString("base64"));
+
+            let resp = await x.arrayBuffer();
+            let buffer = Buffer.from(resp);
+            document.getElementById("aJson").textContent = JSON.stringify(dnsPacket.decode(buffer), null, 4);
+            document.getElementById("aHexDump").textContent = arrayBufferToHexDump(resp);
+            console.log("done");
+        });
         document.getElementById("resolveBtn").addEventListener("click", () => {
             let url = new URL(location)
             let domain = document.getElementById("dnsInput").value;
+            let type = document.getElementById("queryType").value;
             url.searchParams.set("dns", domain);
+            url.searchParams.set("type", type);
             history.pushState({}, "", url);
 
             async function request(domain, type, jsonId, hexId) {
@@ -52,19 +68,22 @@
                 };
                 console.log(request);
                 let buf = dnsPacket.encode(request);
-                let x = await fetch("https://1.1.1.1/dns-query?dns="+btoa(buf));
+                document.getElementById("aJsonReq").textContent = JSON.stringify(request, null, 4);
+                document.getElementById("aHexDumpReq").textContent = arrayBufferToHexDump(buf);
+                let x = await fetch("https://mozilla.cloudflare-dns.com/dns-query?dns="+buf.toString("base64"));
                 let resp = await x.arrayBuffer();
                 let buffer = Buffer.from(resp);
                 document.getElementById(jsonId).textContent = JSON.stringify(dnsPacket.decode(buffer), null, 4);
 
                 document.getElementById(hexId).textContent = arrayBufferToHexDump(resp);
             }
-            request(domain, "A", "aJson", "aHexDump");
-            request(domain, "AAAA", "aaaaJson", "aaaaHexDump");
-            request(domain, "HTTPS", "httpsJson", "httpsHexDump");
+            request(domain, type, "aJson", "aHexDump");
         });
 
         let params = new URL(document.location).searchParams;
+        if (params.get("type")) {
+            document.getElementById("queryType").value = params.get("type");
+        }
         if (params.get("dns")) {
             document.getElementById("dnsInput").value = params.get("dns");
             document.getElementById("resolveBtn").click();
@@ -76,22 +95,19 @@
 <body>
     <div class="container">
         <h1>DNS Resolver</h1>
-        <input type="text" id="dnsInput" placeholder="Enter DNS name">
-        <button id="resolveBtn">Resolve</button>
+        <input type="text" id="dnsInput" class="dnsInput" placeholder="Enter DNS name">
+        <input type="text" id="queryType" class="dnsInput" placeholder="Query type">
+        <button id="resolveBtn" class="btn">Resolve</button>
         <div id="responseA" class="response">
-            <h2>A Record</h2>
-            <pre id="aHexDump"></pre>
+            <h2>Request</h2>
+            <textarea id="aJsonReq" class="like-pre" rows="20"></textarea>
+            <pre id="aHexDumpReq"></pre>
+            <button id="resendBtn" class="btn">Resend</button>
+        </div>
+        <div id="responseA" class="response">
+            <h2>Response</h2>
             <pre id="aJson"></pre>
-        </div>
-        <div id="responseAAAA" class="response">
-            <h2>AAAA Record</h2>
-            <pre id="aaaaHexDump"></pre>
-            <pre id="aaaaJson"></pre>
-        </div>
-        <div id="responseHTTPS" class="response">
-            <h2>HTTPS Record</h2>
-            <pre id="httpsHexDump"></pre>
-            <pre id="httpsJson"></pre>
+            <pre id="aHexDump"></pre>
         </div>
     </div>
 </body>

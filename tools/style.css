@@ -12,14 +12,14 @@ body {
     overflow: hidden;
 }
 
-#dnsInput {
+.dnsInput {
     width: 300px;
     padding: 10px;
     border: 1px solid #ddd;
     margin-bottom: 10px;
 }
 
-#resolveBtn {
+.btn {
     padding: 10px 15px;
     background-color: #5cb85c;
     color: white;
@@ -27,7 +27,7 @@ body {
     cursor: pointer;
 }
 
-#resolveBtn:hover {
+.btn:hover {
     background-color: #4cae4c;
 }
 
@@ -42,4 +42,15 @@ pre {
     background-color: #eee;
     padding: 10px;
     overflow: auto;
+}
+
+textarea.like-pre {
+  font-family: monospace; /* Use monospace font for similarity to <pre> */
+  white-space: pre-wrap; /* Preserves whitespace and line breaks like <pre>, but allows wrapping */
+  overflow: auto; /* Ensures content does not overflow the box */
+  width: 100%; /* Optional: Adjusts the width */
+  height: auto; /* Optional: Adjusts the height */
+  resize: none; /* Optional: Prevents resizing */
+  border: 1px solid #ccc; /* Optional: Adds a border similar to default <pre> styling */
+  padding: 10px; /* Optional: Adds some padding inside the textarea */
 }
