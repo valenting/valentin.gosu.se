@@ -157,7 +157,7 @@ Similar to `android_res_nquery` - returns `sdRef` which can then passed to `DNSS
 
 To my surprise, what I found out is that if the DNS response doesn't contain any records, `select` and `DNSServiceProcessResult` just hang forever.
 
-> [!warning] 
+> [!WARNING]
 > 😱 I really hope this is a bug, because this makes literally no sense. I don't know a lot about MacOS, but this can't be what the person designing this API intended to happen. Do I really have to set a timeout because the API isn't smart enough to continue when the records I'm looking for don't exist? Is there an undocumented flag I'm missing? Is there yet another API I could be using, because this super common use case is broken in this one, which makes me think nobody actually uses it.
 
 Anyway, here's a [gist](https://gist.github.com/valenting/dd1125978313320ee0ab7e52768ea48f) that shows this bug. If you definitely do need HTTPS records, make sure to set a timeout so this call doesn't block forever. (I'll also file a bug with Apple about this eventually).
