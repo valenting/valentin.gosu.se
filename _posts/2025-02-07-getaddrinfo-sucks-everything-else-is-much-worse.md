@@ -101,7 +101,7 @@ I haven’t actually checked if these flags work as expected, but I haven’t se
 
 ## Windows - DNSQuery_A
 
-[DNS_RECORDA (windnsdef.h) - Win32 apps](https://learn.microsoft.com/en-us/windows/win32/api/windnsdef/ns-windnsdef-dns_recorda)
+[DnsQuery_A function (windns.h) - Win32 apps](https://learn.microsoft.com/en-us/windows/win32/api/windns/nf-windns-dnsquery_a)
 
 Since Firefox was already using this function, I didn't expect any surprises.
 Well, while DNSQuery_A does a good job at resolving A and AAAA records, when testing it out for HTTPS records we had a crash on Windows 10 platforms.
@@ -126,7 +126,7 @@ If you're interested in pushing Microsoft to get this fixed, feel free to upvote
 Some things I like about the windows API:
 - It's really powerful. It has [lots of options to control how the Query is made](https://learn.microsoft.com/en-us/windows/win32/dns/dns-constants#dns-query-options), caching, use of hosts file, recursion.
 - The response is a linked list of records similar to getaddrinfo.
-- The `DNS_RECORD.Data` field is a union, so even if the windows library doesn’t know how to parse the record, you still get a buffer of bytes and the length of the record, which is definitely enough to parse any DNS record type you want.
+- The `DNS_RECORD.Data` field is [a union](https://learn.microsoft.com/en-us/windows/win32/api/windnsdef/ns-windnsdef-dns_recorda), so even if the windows library doesn’t know how to parse the record, you still get a buffer of bytes and the length of the record, which is definitely enough to parse any DNS record type you want.
 
 If it weren’t for the Windows 10 implementation bug this API would be my favourite.
 Note that the Windows 10 vs 11 quirk may or may not apply for other record types.
