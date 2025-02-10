@@ -19,7 +19,7 @@ There are a few ways in which `getaddrinfo` kinda sucks. Most of these are well 
 In Firefox `nsHostResolver` has a thread pool dedicated to DNS resolution. DNS requests are put into queues for different priorities and each thread will wake up and pick up the highest priority request and call `getaddrinfo` for that domain.
 
 For other issues, like the missing TTL info there's no real workaround. That means we don't know for how long the DNS record is valid for. We could call `getaddrinfo` every time, but the OS cache isn't unlimited, so it will unnecessarily generate DNS requests for entries that haven't expired yet.
-The way we worked around that in Firefox was to use a different API [DnsQuery_A](moz-extension://19bd1a91-0ecd-4d72-87c9-1c0632c76821/_generated_background_page.html). This one is only available on Windows, which isn't great, but it did improve caching for most of our users. The way this was implemented was that we'd call getaddrinfo, then we'd call DNSQuery_A and only extract the TTL.
+The way we worked around that in Firefox was to use a different API [DnsQuery_A](https://learn.microsoft.com/en-us/windows/win32/api/windns/nf-windns-dnsquery_a). This one is only available on Windows, which isn't great, but it did improve caching for most of our users. The way this was implemented was that we'd call getaddrinfo, then we'd call DNSQuery_A and only extract the TTL.
 
 A few years back we implemented [RFC8484 - DNS Queries over HTTPS (DoH)](https://datatracker.ietf.org/doc/html/rfc8484). That means the raw bytes of the DNS request and response are send via a HTTPS request to a DoH resolver. Now Firefox needed to be capable of parsing the DNS packet from the wire representation, but that did give us some additional benefits. TTL values were now available on all platforms, and we could also parse other record types, such as CNAME, OPT and TXT.
 
@@ -101,7 +101,7 @@ I haven’t actually checked if these flags work as expected, but I haven’t se
 
 ## Windows - DNSQuery_A
 
-[DNS_RECORDA (windnsdef.h) - Win32 apps](moz-extension://19bd1a91-0ecd-4d72-87c9-1c0632c76821/_generated_background_page.html)
+[DNS_RECORDA (windnsdef.h) - Win32 apps](https://learn.microsoft.com/en-us/windows/win32/api/windnsdef/ns-windnsdef-dns_recorda)
 
 Since Firefox was already using this function, I didn't expect any surprises.
 Well, while DNSQuery_A does a good job at resolving A and AAAA records, when testing it out for HTTPS records we had a crash on Windows 10 platforms.
