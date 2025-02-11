@@ -138,7 +138,7 @@ GEM
       jekyll (>= 3.0, < 5.0)
     jekyll-feed (0.17.0)
       jekyll (>= 3.7, < 5.0)
-    jekyll-gfm-admonitions (1.0.3)
+    jekyll-gfm-admonitions (1.1.0)
       cssminify (~> 1.0)
       jekyll (>= 3.0, < 5.0)
       octicons (~> 19.11)
@@ -221,7 +221,7 @@ GEM
       gemoji (>= 3, < 5)
       html-pipeline (~> 2.2)
       jekyll (>= 3.0, < 5.0)
-    json (2.9.1)
+    json (2.10.1)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -286,15 +286,16 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
-  jekyll-feed (~> 0.15)
+  jekyll
+  jekyll-feed
   jekyll-gfm-admonitions
   jekyll-paginate
   jekyll-remote-theme
-  liquid (~> 4.0, >= 4.0.4)
-  minima (~> 2.5)
+  liquid
+  minima
   tale
   tzinfo-data
-  webrick (~> 1.7)
+  webrick
 
 BUNDLED WITH
    2.3.14
