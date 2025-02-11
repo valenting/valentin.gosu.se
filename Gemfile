@@ -37,3 +37,4 @@ gem "jekyll-remote-theme"
 gem "jekyll-paginate"
 
 gem "webrick"
+gem 'activesupport', '< 8.0.0' # Choose a compatible version
