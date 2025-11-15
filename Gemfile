@@ -23,8 +23,11 @@ gem "minima"
 group :jekyll_plugins do
   gem "jekyll-feed"
   gem "jekyll-gfm-admonitions"
+  gem 'jekyll-optional-front-matter'
   gem "github-pages"
 end
+
+gem "kramdown-parser-gfm"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]

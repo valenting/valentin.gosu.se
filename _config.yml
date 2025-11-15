@@ -11,11 +11,8 @@ mastodon:
   instance: fosstodon.org
 
 # Build settings
-markdown: GFM
+markdown: kramdown
 remote_theme: jekyll/minima
-
-minima:
-  skin: auto
 
 repository: valenting/valentin.gosu.se
 
@@ -24,5 +21,7 @@ repository: valenting/valentin.gosu.se
 plugins:
   - jekyll-feed
   - jekyll-gfm-admonitions
+  - jekyll-optional-front-matter
+  - kramdown-parser-gfm
 
 permalink:  /blog/:year/:month/:title
