@@ -162,6 +162,9 @@ To my surprise, what I found out is that if the DNS response doesn't contain any
 
 Anyway, here's a [gist](https://gist.github.com/valenting/dd1125978313320ee0ab7e52768ea48f) that shows this bug. If you definitely do need HTTPS records, make sure to set a timeout so this call doesn't block forever. (I'll also file a bug with Apple about this eventually).
 
+> [!NOTE]
+> (2026-03-26) After a long time I went back to investigate potential solutions. It turns out there is a workaround, which is to pass the [kDNSServiceFlagsReturnIntermediates](https://developer.apple.com/documentation/dnssd/kdnsserviceflagsreturnintermediates?language=objc) flag to the `DNSServiceQueryRecord` call. This makes it so the NXDOMAIN result is immediately returned, and also intermediate CNAMEs. In my opinion this should have been the default, but at least we eventually fixed this in [bug 2026152](https://bugzilla.mozilla.org/show_bug.cgi?id=2026152).
+
 ---
 
 Anyway, the main takeaway from this experience is that after all this time DNS is not a solved problem, even for a coder that just wants to use it without actually understanding the protocol.
