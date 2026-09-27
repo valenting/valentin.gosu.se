@@ -49,7 +49,7 @@
   <main class="shell">
     <header class="top">
       <div><p class="eyebrow" id="region-description">Sweden · Stockholm price area</p><h1>Electricity prices <span id="region-label" style="color:#8cbaff">SE3</span></h1><p class="subtitle">The past six hours, the rest of today and tomorrow when available.</p></div>
-      <div class="actions"><button id="vat" class="pill" type="button" aria-pressed="false">Add 25% VAT</button><button id="refresh" class="btn" type="button">↻ &nbsp;Refresh</button></div>
+      <div class="actions"><button id="vat" class="pill" type="button" aria-pressed="true">Remove 25% VAT</button><button id="refresh" class="btn" type="button">↻ &nbsp;Refresh</button></div>
     </header>
     <section class="summary" aria-label="Current and inspected prices">
       <div class="card current"><div class="cardhead"><strong>Now</strong><span class="tag" id="now-date">—</span></div><div id="now-value" class="value">—</div><p id="now-note" class="cardnote" role="status">Loading prices…</p></div>
@@ -83,7 +83,7 @@
       const time = new Intl.DateTimeFormat('sv-SE', {timeZone:zone, hour:'2-digit', minute:'2-digit', hourCycle:'h23'});
       const number = new Intl.NumberFormat('sv-SE', {minimumFractionDigits:1,maximumFractionDigits:1});
       let data = {yesterday:null,today:null,tomorrow:null}, errors = {yesterday:null,today:null,tomorrow:null};
-      let days = null, hovered = null, withVat = false, loading = false;
+      let days = null, hovered = null, withVat = true, loading = false;
 
       function parts(date) { return Object.fromEntries(dateParts.formatToParts(date).filter(x => x.type !== 'literal').map(x => [x.type,x.value])); }
       function dayInfo(offset) {
