@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a30">
+  <title>Electricity prices · SE3</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf0fc;background:#0b1426;color-scheme:dark}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 75% -10%,#273e69 0,transparent 48%),#0b1426}
+    button{font:inherit}a{color:#9bc3ff}a:hover{color:#c9deff}
+    .shell{max-width:1180px;margin:auto;padding:42px 28px 70px}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:29px}
+    .eyebrow{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:#80aaf8;font-weight:750;margin:0 0 11px}
+    h1{font-size:clamp(30px,4.3vw,52px);letter-spacing:-.05em;line-height:1.05;margin:0 0 10px}
+    .subtitle{margin:0;color:#a6b4ce;font-size:15px;line-height:1.5}
+    .actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .pill,.btn{border:1px solid #415475;background:#1a2943;color:#eaf0fc;border-radius:12px;padding:11px 15px;white-space:nowrap;cursor:pointer}
+    .pill:hover,.btn:hover{background:#283b5b}.btn:focus-visible,.pill:focus-visible,.bar:focus-visible{outline:3px solid #90c2ff;outline-offset:3px}
+    .pill[aria-pressed="true"]{border-color:#73b9fe;background:#253e5d}
+    .summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-bottom:25px}
+    .card,.detail{background:linear-gradient(155deg,#1b2a44,#15223a);border:1px solid #304460;border-radius:22px;box-shadow:0 12px 35px #050b1880}
+    .card{padding:23px 25px;min-height:173px}.card.current{border-color:#5b86bc}
+    .cardhead{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#afbfda;font-size:14px}
+    .tag{font-size:12px;color:#b8d4ff;border:1px solid #466795;border-radius:99px;padding:5px 9px}
+    .value{font-size:clamp(34px,4.5vw,56px);font-weight:750;letter-spacing:-.055em;line-height:1.1;margin:21px 0 2px;font-variant-numeric:tabular-nums}
+    .value small{font-size:16px;letter-spacing:0;font-weight:500;color:#aabbd4;white-space:nowrap}
+    .cardnote{color:#a5b7d0;font-size:13px;margin:7px 0 0;line-height:1.5}.cardnote.warn{color:#f5c789}
+    .detail{padding:25px 27px 22px}.detail h2{margin:0;font-size:23px;letter-spacing:-.03em}
+    .charttitle{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}.muted{font-size:12px;color:#9bacc9;line-height:1.5}
+    .plot{display:flex;align-items:flex-start;gap:8px}.chartscroll{flex:1;min-width:0;overflow-x:auto;margin-top:32px;padding-bottom:7px}
+    .y-axis{flex:0 0 67px;position:relative;height:204px;margin-top:32px;color:#9eafc9;font-size:12px;font-variant-numeric:tabular-nums;text-align:right}
+    .y-unit{position:absolute;right:0;top:-22px;white-space:nowrap;font-size:11px}.y-tick{position:absolute;right:0;transform:translateY(-50%)}.y-tick.first{transform:none}.y-tick.last{transform:translateY(-100%)}
+    .chart{position:relative;min-width:660px;height:204px;border-bottom:1px solid #53647e;isolation:isolate}.gridlines{position:absolute;inset:0;pointer-events:none}.gridline{position:absolute;left:0;right:0;border-top:1px solid #ffffff20}
+    .bars{position:absolute;inset:0}.bar{position:absolute;top:0;bottom:0;background:transparent;border:0;padding:0;min-width:0;cursor:pointer}
+    .bar span{position:absolute;left:1px;right:1px;border-radius:3px 3px 0 0;background:#79acfb;min-height:2px}
+    .bar.past{opacity:.55}.bar.next-day span{background:#ad9afc}.bar.negative span{background:#67d4b1;border-radius:0 0 3px 3px}.bar.is-now span{background:#ffd184}
+    .bar:hover span,.bar:focus-visible span{filter:brightness(1.4)}.gridline.zero{border-top:1px dashed #c6d4e988}
+    .now-line{position:absolute;top:0;bottom:0;border-left:2px solid #ffd184;z-index:2;pointer-events:none}.day-line{position:absolute;top:0;bottom:0;border-left:1px dashed #c5b4ff99;pointer-events:none}
+    .axis{position:relative;min-width:660px;height:26px;color:#9eafc9;font-size:12px;font-variant-numeric:tabular-nums;margin-top:8px}.axis span{position:absolute;white-space:nowrap;transform:translateX(-50%)}.axis span:first-child{transform:none}.axis span:last-child{transform:translateX(-100%)}
+    .legend{display:flex;gap:17px;flex-wrap:wrap;color:#a5b7d0;font-size:12px;margin-top:13px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#79acfb;margin-right:6px}.dot.past{opacity:.55}.dot.next-day{background:#ad9afc}.dot.now{background:#ffd184}.dot.neg{background:#67d4b1}
+    .empty{color:#c0cce0;line-height:1.6;padding:28px 2px}
+    footer{font-size:12px;color:#a0aec6;line-height:1.7;margin-top:21px}footer p{margin:4px 0}
+    @media(max-width:700px){.shell{padding:27px 16px 45px}.top{display:block}.actions{margin-top:20px}.summary{grid-template-columns:1fr}.card{min-height:145px}.detail{padding:21px 17px}.value{margin-top:14px}}
+    @media(prefers-reduced-motion:no-preference){.btn,.pill{transition:background .15s ease}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <div><p class="eyebrow" id="region-description">Sweden · Stockholm price area</p><h1>Electricity prices <span id="region-label" style="color:#8cbaff">SE3</span></h1><p class="subtitle">The past six hours, the rest of today and tomorrow when available.</p></div>
+      <div class="actions"><button id="vat" class="pill" type="button" aria-pressed="false">Add 25% VAT</button><button id="refresh" class="btn" type="button">↻ &nbsp;Refresh</button></div>
+    </header>
+    <section class="summary" aria-label="Current and inspected prices">
+      <div class="card current"><div class="cardhead"><strong>Now</strong><span class="tag" id="now-date">—</span></div><div id="now-value" class="value">—</div><p id="now-note" class="cardnote" role="status">Loading prices…</p></div>
+      <div class="card"><div class="cardhead"><strong id="hover-heading">Now</strong><span class="tag" id="hover-date">—</span></div><div id="hover-value" class="value">—</div><p id="hover-note" class="cardnote" aria-live="off">Move over the chart to inspect an interval.</p></div>
+    </section>
+    <section class="detail" aria-label="Electricity price timeline">
+      <div class="charttitle"><h2>Price timeline</h2><span class="muted" id="chart-status">Past 6 hours → tomorrow · hover or focus a bar for its price</span></div>
+      <div id="graph-content" hidden>
+        <div class="plot"><div class="y-axis" id="y-axis" aria-hidden="true"></div><div class="chartscroll"><div class="chart" id="chart" role="group" aria-label="Price chart in öre per kilowatt-hour"><div class="gridlines" id="gridlines"></div><div class="day-line" id="day-line" hidden></div><div class="bars" id="bars"></div><div class="now-line" id="now-line"></div></div><div class="axis" id="axis"></div></div></div>
+        <div class="legend"><span><i class="dot past"></i>Past 6 hours</span><span><i class="dot"></i>Today</span><span><i class="dot next-day"></i>Tomorrow</span><span><i class="dot now"></i>Now</span><span><i class="dot neg"></i>Below zero</span></div>
+      </div>
+      <p id="graph-empty" class="empty" role="status">Loading prices…</p>
+    </section>
+    <footer><p id="updated">Times shown in Europe/Stockholm.</p><p>Spot prices exclude grid fees, energy tax and retailer charges. VAT switch applies only to the spot price.</p><p>Price data: <a href="https://www.elprisetjustnu.se/elpris-api" target="_blank" rel="noopener noreferrer">Elpriset just nu.se</a>.</p></footer>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const zone = 'Europe/Stockholm';
+      const api = 'https://www.elprisetjustnu.se/api/v1/prices/';
+      const $ = id => document.getElementById(id);
+      const requestedRegion = new URLSearchParams(window.location.search).get('region')?.toUpperCase();
+      const region = /^SE[1-4]$/.test(requestedRegion || '') ? requestedRegion : 'SE3';
+      const regionNames = {SE1:'Luleå',SE2:'Sundsvall',SE3:'Stockholm',SE4:'Malmö'};
+      $('region-label').textContent = region;
+      $('region-description').textContent = `Sweden · ${regionNames[region]} price area`;
+      document.title = `Electricity prices · ${region}`;
+      const dateParts = new Intl.DateTimeFormat('en-CA', {timeZone:zone, year:'numeric', month:'2-digit', day:'2-digit'});
+      const shortDate = new Intl.DateTimeFormat('en-GB', {timeZone:zone, weekday:'long', day:'numeric', month:'long'});
+      const weekday = new Intl.DateTimeFormat('en-GB', {timeZone:zone, weekday:'short'});
+      const time = new Intl.DateTimeFormat('sv-SE', {timeZone:zone, hour:'2-digit', minute:'2-digit', hourCycle:'h23'});
+      const number = new Intl.NumberFormat('sv-SE', {minimumFractionDigits:1,maximumFractionDigits:1});
+      let data = {yesterday:null,today:null,tomorrow:null}, errors = {yesterday:null,today:null,tomorrow:null};
+      let days = null, hovered = null, withVat = false, loading = false;
+
+      function parts(date) { return Object.fromEntries(dateParts.formatToParts(date).filter(x => x.type !== 'literal').map(x => [x.type,x.value])); }
+      function dayInfo(offset) {
+        const p = parts(new Date());
+        // Advancing a calendar date in UTC avoids a 23/25-hour local DST day.
+        const d = new Date(Date.UTC(+p.year,+p.month-1,+p.day+offset,12));
+        const year = String(d.getUTCFullYear()), month = String(d.getUTCMonth()+1).padStart(2,'0'), day = String(d.getUTCDate()).padStart(2,'0');
+        return {key:`${year}-${month}-${day}`,url:`${api}${year}/${month}-${day}_${region}.json`,label:shortDate.format(d)};
+      }
+      function price(n) { return number.format(n * 100 * (withVat ? 1.25 : 1)); }
+      function interval(entry) {return `${time.format(entry.start)}–${time.format(entry.end)}`;}
+      function validEntries(raw) {
+        if (!Array.isArray(raw)) throw new Error('Unexpected API response');
+        const entries = raw.map(row => ({value:Number(row.SEK_per_kWh),start:Date.parse(row.time_start),end:Date.parse(row.time_end)}));
+        if (!entries.length || entries.some(x => !Number.isFinite(x.value) || !Number.isFinite(x.start) || !Number.isFinite(x.end) || x.start >= x.end)) throw new Error('Invalid price data');
+        return entries.sort((a,b)=>a.start-b.start);
+      }
+      async function fetchDay(info) {
+        const response = await fetch(info.url,{cache:'no-store'});
+        if (response.status === 404) return {entries:null,error:'unpublished'};
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return {entries:validEntries(await response.json()),error:null};
+      }
+      function renderValue(id,entry) {
+        const target=$(id);target.replaceChildren();
+        if(!entry){target.textContent='—';return;}
+        target.append(document.createTextNode(price(entry.value)+' '));
+        const unit=document.createElement('small');unit.textContent='öre/kWh';target.append(unit);
+      }
+      function renderReadouts() {
+        const now=Date.now();
+        const current=['yesterday','today'].flatMap(day=>(data[day]||[]).map(entry=>({...entry,day})))
+          .find(entry=>entry.start<=now && now<entry.end);
+        $('now-date').textContent=days.today.label;
+        renderValue('now-value',current);
+        $('now-note').textContent=current
+          ? `${interval(current)} · ${withVat?'incl.':'excl.'} VAT`
+          : errors.today ? 'Current price unavailable. Try Refresh.' : 'No price for the current interval.';
+        const inspected=hovered && (data[hovered.day]||[]).find(entry=>entry.start===hovered.start);
+        const shown=inspected || current;
+        $('hover-heading').textContent=inspected?'Under pointer':'Now';
+        $('hover-date').textContent=inspected?days[hovered.day].label:days.today.label;
+        renderValue('hover-value',shown);
+        $('hover-note').textContent=inspected
+          ? `${interval(inspected)} · ${withVat?'incl.':'excl.'} VAT`
+          : current ? `${interval(current)} · move over the chart to inspect a price` : 'Move over the chart to inspect an interval.';
+      }
+      function renderGraph() {
+        $('chart-status').textContent=errors.tomorrow==='unpublished'
+          ? 'Tomorrow’s prices have not been published yet'
+          : errors.tomorrow==='failed' && !data.tomorrow
+            ? 'Tomorrow’s prices could not be loaded · try Refresh'
+            : 'Past 6 hours → tomorrow · hover or focus a bar for its price';
+        const now=Date.now(), start=now-6*60*60*1000;
+        const entries=['yesterday','today','tomorrow'].flatMap(day =>
+          (data[day] || []).filter(entry => entry.end > start).map(entry => ({...entry,day}))
+        ).sort((a,b)=>a.start-b.start);
+        const available=entries.length>0;
+        $('graph-content').hidden=!available;
+        $('graph-empty').hidden=available;
+        if(!available){$('graph-empty').textContent='No price data available for the timeline. Try Refresh.';return;}
+
+        // Position by timestamps so missing data leaves a real gap on the graph.
+        const end=Math.max(now,...entries.map(entry=>entry.end)), duration=end-start;
+        const width=Math.max(660,Math.ceil(duration/(15*60*1000))*7);
+        const chart=$('chart'), axis=$('axis');
+        chart.style.width=width+'px';axis.style.width=width+'px';
+        const fraction=timestamp=>Math.max(0,Math.min(100,(timestamp-start)/duration*100));
+        const vat=withVat?1.25:1;
+        const values=entries.map(entry=>entry.value*100*vat);
+        const low=Math.min(0,...values), high=Math.max(0,...values);
+        const roughStep=Math.max(.001,(high-low || 1)/4);
+        const magnitude=10**Math.floor(Math.log10(roughStep));
+        const step=[1,2,5,10].find(n=>n*magnitude>=roughStep)*magnitude;
+        const bottom=Math.floor(low/step)*step;
+        const top=Math.max(bottom+step,Math.ceil(high/step)*step);
+        const scale=top-bottom, zero=top/scale*100;
+        const axisNumber=new Intl.NumberFormat('sv-SE',{minimumFractionDigits:0,maximumFractionDigits:Math.min(4,Math.max(1,-Math.floor(Math.log10(step))))});
+        $('now-line').style.left=fraction(now)+'%';
+        const yAxis=$('y-axis'), grid=$('gridlines');yAxis.replaceChildren();grid.replaceChildren();
+        const yUnit=document.createElement('span');yUnit.className='y-unit';yUnit.textContent='öre/kWh';yAxis.append(yUnit);
+        const tickCount=Math.round(scale/step);
+        for(let i=tickCount;i>=0;i--){
+          const tickValue=bottom+i*step, y=(top-tickValue)/scale*100;
+          const label=document.createElement('span');label.className='y-tick'+(i===tickCount?' first':'')+(i===0?' last':'');
+          label.style.top=y+'%';label.textContent=axisNumber.format(Math.abs(tickValue)<step*1e-7?0:tickValue);yAxis.append(label);
+          const line=document.createElement('div');line.className='gridline'+(Math.abs(tickValue)<step*1e-7?' zero':'');
+          line.style.top=y+'%';grid.append(line);
+        }
+        const tomorrowStart=data.tomorrow?.[0]?.start;
+        $('day-line').hidden=!tomorrowStart || tomorrowStart<=start;
+        if(tomorrowStart) $('day-line').style.left=fraction(tomorrowStart)+'%';
+
+        const bars=$('bars'), barFrag=document.createDocumentFragment();bars.replaceChildren();
+        entries.forEach(entry=>{
+          const left=fraction(Math.max(start,entry.start)), right=fraction(entry.end);
+          const bar=document.createElement('button'), fill=document.createElement('span');
+          bar.type='button';bar.style.left=left+'%';bar.style.width=Math.max(0,right-left)+'%';
+          bar.className='bar'+(entry.end<=now?' past':'')+(entry.day==='tomorrow'?' next-day':'')+(entry.value<0?' negative':'')+(entry.start<=now && now<entry.end?' is-now':'');
+          const y=(top-entry.value*100*vat)/scale*100;
+          fill.style.top=Math.min(y,zero)+'%';fill.style.height=Math.max(.4,Math.abs(zero-y))+'%';
+          bar.title=`${weekday.format(entry.start)} ${interval(entry)}: ${price(entry.value)} öre/kWh`;
+          bar.setAttribute('aria-label',bar.title);bar.append(fill);
+          bar.addEventListener('pointerenter',()=>{hovered={day:entry.day,start:entry.start};renderReadouts();});
+          bar.addEventListener('pointerleave',()=>{hovered=null;renderReadouts();});
+          bar.addEventListener('focus',()=>{hovered={day:entry.day,start:entry.start};renderReadouts();});
+          bar.addEventListener('blur',()=>{hovered=null;renderReadouts();});
+          barFrag.append(bar);
+        });
+        bars.append(barFrag);
+
+        axis.replaceChildren();
+        const tickTimes=[start];
+        for(const entry of entries){
+          const hour=Number(time.format(entry.start).slice(0,2));
+          const minute=Number(time.format(entry.start).slice(3,5));
+          if(entry.start>start && hour%6===0 && minute===0 && tickTimes.at(-1)!==entry.start) tickTimes.push(entry.start);
+        }
+        if(end-tickTimes.at(-1)>45*60*1000) tickTimes.push(end);
+        tickTimes.forEach(timestamp=>{
+          const tick=document.createElement('span');tick.style.left=fraction(timestamp)+'%';
+          tick.textContent=weekday.format(timestamp)+' '+time.format(timestamp);
+          axis.append(tick);
+        });
+      }
+      function render() { if (!days) return;renderReadouts();renderGraph(); }
+      async function load() {
+        if (loading) return;loading=true;$('refresh').disabled=true;
+        const next={yesterday:dayInfo(-1),today:dayInfo(0),tomorrow:dayInfo(1)};
+        const changed=!days || days.today.key!==next.today.key;
+        days=next;
+        if(changed){data={yesterday:null,today:null,tomorrow:null};errors={yesterday:null,today:null,tomorrow:null};hovered=null;render();}
+        const dayNames=['yesterday','today','tomorrow'];
+        const results=await Promise.allSettled(dayNames.map(day=>fetchDay(days[day])));
+        for(const [i,day] of dayNames.entries()) {
+          const result=results[i];
+          if(result.status==='fulfilled'){data[day]=result.value.entries;errors[day]=result.value.error;}
+          else {errors[day]='failed';/* Keep previously loaded prices if a refresh fails. */}
+        }
+        $('updated').textContent=`Last checked ${time.format(new Date())} (Stockholm time).`;
+        render();loading=false;$('refresh').disabled=false;
+      }
+      $('vat').addEventListener('click',()=>{withVat=!withVat;$('vat').setAttribute('aria-pressed',String(withVat));$('vat').textContent=withVat?'Remove 25% VAT':'Add 25% VAT';render();});
+      $('refresh').addEventListener('click',load);
+      setInterval(()=>{if(document.visibilityState==='visible') {if(!days || days.today.key!==dayInfo(0).key) load(); else render();}},60_000);
+      setInterval(()=>{if(document.visibilityState==='visible') load();},5*60_000);
+      document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible') load();});
+      load();
+    })();
+  </script>
+</body>
+</html>
