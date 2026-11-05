@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Top Nightly crashes</title>
+<script>
+  const params = new URLSearchParams({ product: "Firefox", release_channel: "nightly" });
+  params.append("_facets", "signature");
+  params.append("_sort", "-date");
+  for (const c of ["date", "signature", "product", "version", "build_id", "platform", "release_channel"]) {
+    params.append("_columns", c);
+  }
+  location.replace(`https://crash-stats.mozilla.org/search/?${params}#facet-signature`);
+</script>
+</head>
+<body>
+<noscript>
+  JavaScript is required. Open
+  <a href="https://crash-stats.mozilla.org/search/?product=Firefox&release_channel=nightly#facet-signature">Crash Stats Super Search</a>
+  directly.
+</noscript>
+</body>
+</html>
