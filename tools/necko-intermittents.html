@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Necko intermittent failures</title>
+<script>
+  const days = parseInt(new URLSearchParams(location.search).get("days"), 10) || 14;
+  const iso = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+  const params = new URLSearchParams({
+    startday: iso(days),
+    endday: iso(0),
+    tree: "all",
+    product: "Core",
+    component: [
+      "DOM: Networking",
+      "Networking",
+      "Networking: Cache",
+      "Networking: DNS",
+      "Networking: HTTP",
+      "Networking: NNTP",
+    ].join(","),
+  });
+  location.replace(`https://treeherder.mozilla.org/intermittent-failures/main?${params}`);
+</script>
+</head>
+<body>
+<noscript>
+  JavaScript is required. Open the
+  <a href="https://treeherder.mozilla.org/intermittent-failures/main">Intermittent Failures view</a>
+  directly.
+</noscript>
+</body>
+</html>
