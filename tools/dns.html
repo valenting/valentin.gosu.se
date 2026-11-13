@@ -32,16 +32,29 @@
         return hexDump.trim();
     }
 
+    // RFC 8484 requires base64url encoding without padding for GET requests.
+    const DEFAULT_DOH_URL = "https://mozilla.cloudflare-dns.com/dns-query";
+
+    async function dohQuery(buf) {
+        let b64 = buf.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+        let dohUrl = new URL(document.getElementById("dohUrl").value.trim() || DEFAULT_DOH_URL);
+        dohUrl.searchParams.set("dns", b64);
+        let x = await fetch(dohUrl, {
+            headers: { "Accept": "application/dns-message" },
+        });
+        if (!x.ok) {
+            throw new Error(`DoH request failed: HTTP ${x.status}`);
+        }
+        return x.arrayBuffer();
+    }
+
     window.addEventListener("load", () => {
         document.getElementById("resendBtn").addEventListener("click", async () => {
             let request = JSON.parse(document.getElementById("aJsonReq").value);
             console.log(request.questions[0].name);
             let buf = dnsPacket.encode(request);
             document.getElementById("aHexDumpReq").textContent = arrayBufferToHexDump(buf);
-            console.log(buf.toString("base64"));
-            let x = await fetch("https://mozilla.cloudflare-dns.com/dns-query?dns="+buf.toString("base64"));
-
-            let resp = await x.arrayBuffer();
+            let resp = await dohQuery(buf);
             let buffer = Buffer.from(resp);
             document.getElementById("aJson").textContent = JSON.stringify(dnsPacket.decode(buffer), null, 4);
             document.getElementById("aHexDump").textContent = arrayBufferToHexDump(resp);
@@ -51,8 +64,14 @@
             let url = new URL(location)
             let domain = document.getElementById("dnsInput").value;
             let type = document.getElementById("queryType").value;
+            let doh = document.getElementById("dohUrl").value.trim();
             url.searchParams.set("dns", domain);
             url.searchParams.set("type", type);
+            if (doh && doh !== DEFAULT_DOH_URL) {
+                url.searchParams.set("doh", doh);
+            } else {
+                url.searchParams.delete("doh");
+            }
             history.pushState({}, "", url);
 
             async function request(domain, type, jsonId, hexId) {
@@ -70,8 +89,7 @@
                 let buf = dnsPacket.encode(request);
                 document.getElementById("aJsonReq").textContent = JSON.stringify(request, null, 4);
                 document.getElementById("aHexDumpReq").textContent = arrayBufferToHexDump(buf);
-                let x = await fetch("https://mozilla.cloudflare-dns.com/dns-query?dns="+buf.toString("base64"));
-                let resp = await x.arrayBuffer();
+                let resp = await dohQuery(buf);
                 let buffer = Buffer.from(resp);
                 document.getElementById(jsonId).textContent = JSON.stringify(dnsPacket.decode(buffer), null, 4);
 
@@ -81,6 +99,7 @@
         });
 
         let params = new URL(document.location).searchParams;
+        document.getElementById("dohUrl").value = params.get("doh") || DEFAULT_DOH_URL;
         if (params.get("type")) {
             document.getElementById("queryType").value = params.get("type");
         }
@@ -97,6 +116,7 @@
         <h1>DNS Resolver</h1>
         <input type="text" id="dnsInput" class="dnsInput" placeholder="Enter DNS name">
         <input type="text" id="queryType" class="dnsInput" placeholder="Query type">
+        <input type="url" id="dohUrl" class="dnsInput" placeholder="DoH URL (default: https://mozilla.cloudflare-dns.com/dns-query)">
         <button id="resolveBtn" class="btn">Resolve</button>
         <div id="responseA" class="response">
             <h2>Request</h2>
